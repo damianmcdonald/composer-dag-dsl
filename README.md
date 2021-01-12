@@ -52,7 +52,7 @@ Assuming that your computer already includes an installation of Python3 and Pip3
 cd composer-dag-dsl
 
 # install the python dependenices
-python -m pip install -r requirements-linux.txt
+python -m pip install -r requirements.txt
 ```
 
 ## Execute the unit tests
