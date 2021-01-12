@@ -1,0 +1,12 @@
+{
+    "dag_name" : "minimal_dag_bash_operator",
+    "mode": "INLINE",
+    "bash_operators": [
+        {
+            "task_id" : "bash_operator_01",
+            "command" : [
+                "echo 'Hello from Airflow Bash Operator 01'"
+            ]
+        }
+    ]
+}

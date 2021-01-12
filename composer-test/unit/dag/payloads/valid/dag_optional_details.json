@@ -1,0 +1,71 @@
+{
+    "dag_name" : "dag_optional_details",
+    "dag_description" : "This is an example of a DAG with optional details",
+    "default_args" : {
+        "owner": "Composer Example",
+        "depends_on_past": "False",
+        "email": [""],
+        "email_on_failure": "False",
+        "email_on_retry": "False",
+        "retries": 1
+    },
+    "dag_tags" : [
+        "tag_01",
+        "tag_02",
+        "tag_03"
+    ],
+    "dag_params": {
+        "param_name_01" : "param_val_01",
+        "param_name_02" : "param_val_02",
+        "param_name_03" : "param_val_03"
+    },
+    "doc_md": [
+        "# h1 Heading",
+        " * bullet point 1",
+        " * bullet point 2",
+        "## h2 heading",
+        "Documentation example"
+    ],
+    "dynamic_functions" : {
+        "start_date": {
+            "start_date_def" : [
+                "def start_date_func():",
+                "   import datetime",
+                "   from datetime import timezone",
+                "   return datetime.datetime.now(tz=timezone.utc) - datetime.timedelta(days=1)"
+            ],
+            "start_date_name" : "start_date_func"
+        },
+        "schedule_interval" : {
+            "schedule_interval_def" : [
+                "def schedule_interval_func():",
+                "   return None"
+            ],
+            "schedule_interval_name" : "schedule_interval_func"
+        },
+        "retry_delay" : {
+            "retry_delay_def" : [
+                "def retry_delay_func():",
+                "   import datetime",
+                "   return datetime.timedelta(minutes=5)"
+            ],
+            "retry_delay_name" : "retry_delay_func"
+        },
+        "dagrun_timeout" : {
+            "dagrun_timeout_def" : [
+                "def dagrun_timeout_func():",
+                "   import datetime",
+                "   return datetime.timedelta(minutes=5)"
+            ],
+            "dagrun_timeout_name" : "dagrun_timeout_func"
+        }
+    },
+    "mode": "INLINE",
+    "kubernetes_pod_operators": [
+        {
+            "task_id": "k8s_pod_operator_example_task_01",
+            "name": "k8s_pod_example_01",
+            "image": "bash"
+        }
+    ]
+}

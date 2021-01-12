@@ -1,0 +1,204 @@
+{
+    "dag_name" : "dag_complete",
+    "dag_description" : "This is an example of a complete DAG",
+    "default_args" : {
+        "owner": "Composer Example",
+        "depends_on_past": "False",
+        "email": [""],
+        "email_on_failure": "False",
+        "email_on_retry": "False",
+        "retries": 1
+    },
+    "dag_tags" : [
+        "tag_01",
+        "tag_02",
+        "tag_03"
+    ],
+    "dag_params": {
+        "param_name_01" : "param_val_01",
+        "param_name_02" : "param_val_02",
+        "param_name_03" : "param_val_03"
+    },
+    "doc_md": [
+        "# h1 Heading",
+        " * bullet point 1",
+        " * bullet point 2",
+        "## h2 heading",
+        "Documentation example"
+    ],
+    "dynamic_functions" : {
+        "start_date": {
+            "start_date_def" : [
+                "def start_date_func():",
+                "   import datetime",
+                "   return datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(days=1)"
+            ],
+            "start_date_name" : "start_date_func"
+        },
+        "schedule_interval" : {
+            "schedule_interval_def" : [
+                "def schedule_interval_func():",
+                "   return None"
+            ],
+            "schedule_interval_name" : "schedule_interval_func"
+        },
+        "retry_delay" : {
+            "retry_delay_def" : [
+                "def retry_delay_func():",
+                "   import datetime",
+                "   return datetime.timedelta(minutes=5)"
+            ],
+            "retry_delay_name" : "retry_delay_func"
+        },
+        "dagrun_timeout" : {
+            "dagrun_timeout_def" : [
+                "def dagrun_timeout_func():",
+                "   import datetime",
+                "   return datetime.timedelta(minutes=5)"
+            ],
+            "dagrun_timeout_name" : "dagrun_timeout_func"
+        }
+    },
+    "mode": "INLINE",
+    "execution_sequence": [
+        "bash_operator_01",
+        "k8s_pod_operator_example_task_01",
+        "python_operator_01",
+        "bash_operator_02",
+        "python_operator_02"
+    ],
+    "bash_operators": [
+        {
+            "task_id": "bash_operator_01",
+            "command": [
+                "echo 'Hello from Airflow Bash Operator 01'"
+            ]
+        },
+        {
+            "task_id": "bash_operator_02",
+            "command": [
+                "echo 'Hello from Airflow Bash Operator 02'",
+                "export MY_VAR=\"Airflow Bash Operator 02\"",
+                "echo \"Printing the value of MY_VAR: ${MY_VAR}\""
+            ]
+        }
+    ],
+    "python_operators": [
+        {
+            "task_id": "python_operator_01",
+            "function_def": [
+                "def python_operator_func_1():",
+                "   print('Hello from Airflow Python Operator 01 -- DYNAMIC')",
+                "   def python_operator_func_2():",
+                "       print('Hello from Airflow Python Operator 02 -- DYNAMIC')",
+                "   python_operator_func_2()"
+            ],
+            "function_name": "python_operator_func_1"
+        },
+        {
+            "task_id": "python_operator_02",
+            "function_def": [
+                "def python_operator_func_1():",
+                "   print('Hello from Airflow Python Operator 01 -- DYNAMIC')",
+                "   def python_operator_func_2():",
+                "       print('Hello from Airflow Python Operator 02 -- DYNAMIC')",
+                "   python_operator_func_2()"
+            ],
+            "function_name": "python_operator_func_1"
+        }
+    ],
+    "kubernetes_secrets": {
+        "my_secret_env": {
+            "deploy_type": "env",
+            "deploy_target": "SQL_CONN",
+            "secret": "airflow-secrets",
+            "key": "sql_alchemy_conn"
+        },
+        "my_secret_volume": {
+            "deploy_type": "volume",
+            "deploy_target": "/var/secrets/google",
+            "secret": "service-account",
+            "key": "service-account.json"
+        }
+    },
+    "kubernetes_pod_operators": [
+        {
+            "task_id": "k8s_pod_operator_example_task_01",
+            "name": "k8s_pod_example_01",
+            "image": "bash",
+            "namespace": "default",
+            "cmds": [
+                "echo"
+            ],
+            "arguments": [
+                "'Hello from Airflow Kubernetes Pod Operator 01'"
+            ],
+            "env_vars": {
+                "key_01": "val_01",
+                "key_03": "val_02",
+                "key_03": "val_03"
+            },
+            "labels": {
+                "label_name_01": "label_value_01",
+                "label_name_02": "label_value_02",
+                "label_name_03": "label_value_03"
+            },
+            "pod_secret_refs": [
+                "my_secret_env",
+                "my_secret_volume"
+            ],
+            "image_pull_secret_refs": [
+                "my_secret_env"
+            ],
+            "ports": [
+                "8080",
+                "5100"
+            ],
+            "startup_timeout_seconds": 120,
+            "affinity": {
+                "nodeAffinity": {
+                    "requiredDuringSchedulingIgnoredDuringExecution": {
+                        "nodeSelectorTerms": [
+                            {
+                                "matchExpressions": [
+                                    {
+                                        "key": "cloud.google.com/gke-nodepool",
+                                        "operator": "In",
+                                        "values": [
+                                            "pool-0",
+                                            "pool-1"
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            "image_pull_policy": "Always",
+            "annotations": {
+                "key1": "value1"
+            },
+            "resources": {
+                "limit_memory": 1,
+                "limit_cpu": 1
+            },
+            "config_file": "/home/airflow/composer_kube_config",
+            "volumes": [],
+            "volume_mounts": [],
+            "resources": [
+                {
+                    "request_memory": "250mMib",
+                    "request_cpu": "500mi",
+                    "limit_memory": "250mMib",
+                    "limit_cpu": "500mi",
+                    "limit_gpu": "1"
+                }
+            ],
+            "configmaps": [
+                "config_map_01",
+                "config_map_02"
+            ]
+        }
+    ]
+}

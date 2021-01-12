@@ -1,0 +1,28 @@
+{
+    "dag_name" : "kubernetes_pod_operators_common",
+    "mode": "INLINE",
+    "kubernetes_pod_operators": [
+        {
+            "task_id": "k8s_pod_operator_example_task_01",
+            "name": "k8s_pod_example_01",
+            "image": "bash",
+            "namespace": "default",
+            "cmds": [
+                "echo"
+            ],
+            "arguments": [
+                "'Hello from Airflow Kubernetes Pod Operator 01'"
+            ],
+            "env_vars": {
+                "key_01": "val_01",
+                "key_03": "val_02",
+                "key_03": "val_03"
+            },
+            "labels": {
+                "label_name_01": "label_value_01",
+                "label_name_02": "label_value_02",
+                "label_name_03": "label_value_03"
+            }
+        }
+    ]
+}

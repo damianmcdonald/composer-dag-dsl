@@ -1,0 +1,79 @@
+{
+    "name": "projects/playground-s-11-3bf4fb6c/locations/europe-west3/environments/composer",
+    "config": {
+        "gkeCluster": "projects/playground-s-11-3bf4fb6c/zones/europe-west3-c/clusters/europe-west3-composer-1b28efe1-gke",
+        "dagGcsPrefix": "gs://europe-west3-composer-1b28efe1-bucket/dags",
+        "nodeCount": 3,
+        "softwareConfig": {
+            "imageVersion": "composer-1.13.2-airflow-1.10.12",
+            "pythonVersion": "3"
+        },
+        "nodeConfig": {
+            "location": "projects/playground-s-11-3bf4fb6c/zones/europe-west3-c",
+            "machineType": "projects/playground-s-11-3bf4fb6c/zones/europe-west3-c/machineTypes/n1-standard-1",
+            "network": "projects/playground-s-11-3bf4fb6c/global/networks/default",
+            "diskSizeGb": 100,
+            "oauthScopes": [
+                "https://www.googleapis.com/auth/cloud-platform"
+            ],
+            "serviceAccount": "299593780315-compute@developer.gserviceaccount.com",
+            "ipAllocationPolicy": {}
+        },
+        "airflowUri": "https://sde120c7fa68ea00ep-tp.appspot.com",
+        "privateEnvironmentConfig": {
+            "privateClusterConfig": {},
+            "webServerIpv4CidrBlock": "172.31.249.0/24",
+            "cloudSqlIpv4CidrBlock": "10.0.0.0/12"
+        },
+        "webServerNetworkAccessControl": {
+            "allowedIpRanges": [
+                {
+                    "value": "0.0.0.0/0",
+                    "description": "Allows access from all IPv4 addresses (default value)"
+                },
+                {
+                    "value": "::0/0",
+                    "description": "Allows access from all IPv6 addresses (default value)"
+                }
+            ]
+        },
+        "databaseConfig": {
+            "machineType": "db-n1-standard-2"
+        },
+        "webServerConfig": {
+            "machineType": "composer-n1-webserver-2"
+        },
+        "encryptionConfig": {}
+    },
+    "uuid": "443e0cd0-e7ed-457e-bc88-a02aabe490e9",
+    "state": "RUNNING",
+    "createTime": "2020-12-09T10:12:18.531Z",
+    "updateTime": "2020-12-09T10:29:20.902Z",
+    "query_string": {
+        "client_id": [
+            "401501771865-j04v42mav328ocngb267ts6mlh82j8uk.apps.googleusercontent.com"
+        ],
+        "response_type": [
+            "code"
+        ],
+        "scope": [
+            "openid email"
+        ],
+        "redirect_uri": [
+            "https://iap.googleapis.com/v1/oauth/clientIds/401501771865-j04v42mav328ocngb267ts6mlh82j8uk.apps.googleusercontent.com:handleRedirect"
+        ],
+        "code_challenge": [
+            "jsbI-ZsgOEHXMO460BUQYy88xCDighQZ3jW5HnnWI00"
+        ],
+        "code_challenge_method": [
+            "S256"
+        ],
+        "cred_ref": [
+            "true"
+        ],
+        "state": [
+            "eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCIsImtpZCI"
+        ]
+    },
+    "client_id": "401501771865-j04v42mav328ocngb267ts6mlh82j8uk.apps.googleusercontent.com"
+}

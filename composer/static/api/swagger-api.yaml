@@ -1,0 +1,603 @@
+swagger: "2.0"
+info:
+  description: "API documentation for the composer-dag-dsl project which consists of a python API that provides dag validation, deployment and triggering functionality within a GCP Cloud composer environment."
+  version: "1.0.0"
+  title: "Composer DAG JSON DSL"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+externalDocs:
+  description: "GCP Cloud Composer documentation"
+  url: "https://cloud.google.com/composer/docs"
+host: "localhost:5000"
+basePath: "/api/v1"
+tags:
+- name: "test"
+  description: "Operations to test that the application is functioning"
+- name: "composer"
+  description: "Cloud Composer specific operations"
+- name: "dag"
+  description: "DAG (Directed Acyclic Graph) specific operations"
+  externalDocs:
+    description: "Git repository documentation"
+    url: "https://github.com/damianmcdonald/composer-dag-dsl#json-dag-dsl"
+schemes:
+- "https"
+- "http"
+paths:
+  /test:
+    get:
+      tags:
+        - "test"
+      summary: "Tests the application to verify correct deployment"
+      description: "Tests the application to verify correct deployment by reading and returning the system environment variables."
+      operationId: "test"
+      responses:
+        "200":
+          description: "Success response"
+        "500":
+          description: "Internal error"
+  /composer/api:
+    get:
+      tags:
+        - "composer"
+      summary: "Gets the configuration information of the Cloud Composer experimental API."
+      description: "Gets the configuration information of the Cloud Composer experimental API."
+      operationId: "composerApi"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "GCP Cloud Composer project, location and environment details."
+          required: false
+          schema:
+            $ref: "#/definitions/ComposerProject"
+      responses:
+        "200":
+          description: "Success response"
+        "500":
+          description: "Internal error"
+  /composer/config:
+    get:
+      tags:
+        - "composer"
+      summary: "Gets the configuration for a Cloud Composer environment"
+      description: "Gets the configuration for a Cloud Composer environment."
+      operationId: "composerConfig"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "GCP Cloud Composer project, location and environment details."
+          required: false
+          schema:
+            $ref: "#/definitions/ComposerProject"
+      responses:
+        "200":
+          description: "Success response"
+        "500":
+          description: "Internal error"
+  /dag/deploy:
+    post:
+      tags:
+        - "dag"
+      summary: "Deploys a dag to a Cloud Composer environment"
+      description: "Deploys a dag to a Cloud Composer environment."
+      operationId: "dagDeploy"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Definition of Cloud Composer dag using the JSON DSL."
+          required: true
+          schema:
+            $ref: "#/definitions/DagDsl"
+      responses:
+        "200":
+          description: "Success response"
+        "500":
+          description: "Internal error"
+      externalDocs:
+        description: "Git repository documentation"
+        url: "https://github.com/damianmcdonald/composer-dag-dsl#json-dag-dsl"
+  /dag/list:
+    get:
+      tags:
+        - "dag"
+      summary: "List the Dags currently deployed to a Cloud Composer environment"
+      description: "Lists the Dags currently deployed to a Cloud Composer environment."
+      operationId: "dagList"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "GCP Cloud Composer project, location and environment details."
+          required: false
+          schema:
+            $ref: "#/definitions/ComposerProject"
+      responses:
+        "200":
+          description: "Success response"
+        "500":
+          description: "Internal error"
+  /dag/trigger{dagName}:
+    put:
+      tags:
+        - "dag"
+      summary: "Triggers a dag in a Cloud Composer environment"
+      description: "Triggers a dag in a Cloud Composer environment."
+      operationId: "dagTrigger"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "dagName"
+          in: "path"
+          description: "Name of the dag to be triggered"
+          required: true
+          type: "string"
+        - in: "body"
+          name: "body"
+          description: "GCP Cloud Composer project, location and environment details."
+          required: false
+          schema:
+            $ref: "#/definitions/ComposerProject"
+      responses:
+        "200":
+          description: "Success response"
+        "500":
+          description: "Internal error"
+  /dag/validate:
+    post:
+      tags:
+        - "dag"
+      summary: "Validate a dag to confirm compatibility and correctness with Cloud Composer"
+      description: "Validates a dag to confirm compatibility and correctness with Cloud Composer."
+      operationId: "dagValidate"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - in: "body"
+          name: "body"
+          description: "Definition of Cloud Composer dag using the JSON DSL."
+          required: true
+          schema:
+            $ref: "#/definitions/DagDsl"
+      responses:
+        "200":
+          description: "Success response"
+        "500":
+          description: "Internal error"
+      externalDocs:
+        description: "Git repository documentation"
+        url: "https://github.com/damianmcdonald/composer-dag-dsl#json-dag-dsl"
+definitions:
+  ComposerProject:
+    type: "object"
+    required:
+      - "project_id"
+      - "location"
+      - "composer_environment"
+    properties:
+      project_id:
+        type: "string"
+        description: "GCP project id of the cloud composer instance. **OPTIONAL** if PROJECT_ID environment variable is configured."
+      location:
+        type: "string"
+        description: "GCP zone name of the cloud composer instance. **OPTIONAL** if GCP_LOCATION environment variable is configured."
+      composer_environment:
+        type: "string"
+        description: "Name of the cloud composer instance. **OPTIONAL** if COMPOSER_ENVIRONMENT environment variable is configured."
+    xml:
+      name: "ComposerProject"
+  DagDefaultArgs:
+    type: "object"
+    properties:
+      owner:
+        type: "string"
+        description: "Name of the owner of the Dag. *Optional*."
+      depends_on_past:
+        type: "boolean"
+        description: "Indicates if the Dag depends on the past. If depends_on_past == True, the previous task instance needs to have succeeded (except if it is the first run for that task). *Optional*."
+      email:
+        type: "array"
+        items:
+          type: "string"
+        description: "Email addresses of the recipients of Dag notifications. *Optional*."
+      email_on_failure:
+        type: "boolean"
+        description: "Indicates if an email should be sent on Dag failure. *Optional*."
+      email_on_retry:
+        type: "string"
+        description: "Indicates if an email should be sent on Dag retry. *Optional*."
+      retries:
+        type: "integer"
+        format: "int64"
+        description: "Number of retry attempts to perform. *Optional*."
+    xml:
+      name: "DagDefaultArgs"
+  DagStartDateFunction:
+    type: "object"
+    properties:
+      start_date_def:
+        type: "array"
+        items:
+          type: "string"
+        description: "Each element of the array contains a line of the code of the function. *Optional*."
+      start_date_name:
+        type: "string"
+        description: "Name of the function. This must match the name of the function described in start_date_def. *Optional*."
+    xml:
+      name: "DagStartDateFunction"
+  DagScheduledIntervalFunction:
+    type: "object"
+    properties:
+      schedule_interval_def:
+        type: "array"
+        items:
+          type: "string"
+        description: "Each element of the array contains a line of the code of the function. *Optional*."
+      schedule_interval_name:
+        type: "string"
+        description: "Name of the function. This must match the name of the function described in schedule_interval_def. *Optional*."
+    xml:
+      name: "DagScheduledIntervalFunction"
+  DagRetryDelayFunction:
+    type: "object"
+    properties:
+      retry_delay_def:
+        type: "array"
+        items:
+          type: "string"
+        description: "Each element of the array contains a line of the code of the function. *Optional*."
+      retry_delay_name:
+        type: "string"
+        description: "Name of the function. This must match the name of the function described in retry_delay_def. *Optional*."
+    xml:
+      name: "DagRetryDelayFunction"
+  DagRunTimeoutFunction:
+    type: "object"
+    properties:
+      dagrun_timeout_def:
+        type: "array"
+        items:
+          type: "string"
+        description: "Each element of the array contains a line of the code of the function. *Optional*."
+      dagrun_timeout_name:
+        type: "string"
+        description: "Name of the function. This must match the name of the function described in dagrun_timeout_def. *Optional*."
+    xml:
+      name: "DagRunTimeoutFunction"
+  DagDynamicFunctions:
+    type: "object"
+    properties:
+      start_date:
+        $ref: "#/definitions/DagStartDateFunction"
+      schedule_interval:
+        $ref: "#/definitions/DagScheduledIntervalFunction"
+      retry_delay:
+        $ref: "#/definitions/DagRetryDelayFunction"
+      dagrun_timeout:
+        $ref: "#/definitions/DagRunTimeoutFunction"
+    xml:
+      name: "DagDynamicFunctions"
+  BashOperator:
+    type: "object"
+    required:
+      - "task_id"
+      - "command"
+    properties:
+      task_id:
+        type: "string"
+        description: "Unique name of the operator."
+      command:
+        type: "array"
+        items:
+          type: "string"
+        description: "Each element of the array contains a line of the bash command to be executed by the operator."
+    xml:
+      name: "BashOperator"
+  PythonOperator:
+    type: "object"
+    required:
+      - "task_id"
+      - "function_def"
+    properties:
+      task_id:
+        type: "string"
+        description: "Unique name of the operator."
+      function_def:
+        type: "array"
+        items:
+          type: "string"
+        description: "Each element of the array contains a line of the python code to be executed by the operator."
+    xml:
+      name: "PythonOperator"
+  KubernetesSecret:
+    type: "object"
+    required:
+      - "deploy_type"
+      - "deploy_target"
+      - "secret"
+      - "key"
+    properties:
+      deploy_type:
+        type: "string"
+        enum:
+          - "env"
+          - "volume"
+        description: "Type of the secret; env or volume."
+      deploy_target:
+        type: "string"
+        description: "Name of the secret when deploy_type==env or path to secret when deploy_type==volume."
+      secret:
+        type: "string"
+        description: "Name of the secret."
+      key:
+        type: "string"
+        description: "Value of the secret."
+    xml:
+      name: "KubernetesSecret"
+  KubernetesResource:
+    type: "object"
+    properties:
+      request_memory:
+        type: "string"
+        description: "Kubernetes memory request for the pod."
+      request_cpu:
+        type: "string"
+        description: "Kubernetes CPU request for the pod."
+      limit_memory:
+        type: "string"
+        description: "Kubernetes memory limit for the pod."
+      limit_cpu:
+        type: "string"
+        description: "Kubernetes CPU limit for the pod."
+      limit_gpu:
+        type: "string"
+        description: "Kubernetes GPU limit for the pod."
+    xml:
+      name: "KubernetesResource"
+  KubernetesMatchExpression:
+    type: "object"
+    properties:
+      key:
+        type: "string"
+        description: "The key expression to be matched."
+      operator:
+        type: "string"
+        enum:
+          - "in"
+          - "notin"
+          - "exists"
+        description: "The expression match operator."
+      values:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of values to be matched."
+    xml:
+      name: "KubernetesMatchExpression"
+  KubernetesAffinity:
+    type: "object"
+    properties:
+      nodeAffinity:
+        type: "object"
+        description: "Kubernetes node affinity."
+        properties:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            type: "object"
+            description: "Kubernetes node affinity rule."
+            properties:
+              nodeSelectorTerms:
+                type: "array"
+                description: "An array of kubernetes node selector terms."
+                items:
+                  type: "object"
+                  description: "Kubernetes node selector terms."
+                  properties:
+                    matchExpressions:
+                      type: "array"
+                      items:
+                        $ref: "#/definitions/KubernetesMatchExpression"
+                      description: "An array of node affinity expressions to match."
+    xml:
+      name: "KubernetesAffinity"
+  KubernetesOperator:
+    type: "object"
+    required:
+      - "task_id"
+      - "name"
+      - "image"
+    properties:
+      task_id:
+        type: "string"
+        description: "Unique name of the operator."
+      name:
+        type: "string"
+        description: "Descriptive name of the operator."
+      image:
+        type: "string"
+        description: "Name of the Docker image of the operator."
+      namespace:
+        type: "string"
+        description: "The Kubernetes namespace in which to deploy the operator."
+      cmds:
+        type: "array"
+        items:
+          type: "string"
+        description: "Array of commands to be executed by the Docker image."
+      arguments:
+        type: "array"
+        items:
+          type: "string"
+        description: "Array of arguments to be executed by the Docker image."
+      env_vars:
+        type: "object"
+        additionalProperties:
+          type: "string"
+        description: "Key/value pairs of environment variables to be passed to the operator."
+      labels:
+        type: "object"
+        additionalProperties:
+          type: "string"
+        description: "Key/value pairs of labels to be passed to the operator."
+      pod_secret_refs:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of the names of the kubernetes_secrets required by the operator."
+      image_pull_secret_refs:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of the names of the kubernetes_secrets required by the operator in order to pull the Docker image."
+      ports:
+        type: "array"
+        items:
+          type: "integer"
+          format: "int64"
+        description: "An array of the ports number to be exposed from the Docker image."
+      startup_timeout_seconds:
+        type: "integer"
+        format: "int64"
+        description: "The pod startup timeout in seconds."
+      image_pull_policy:
+        type: "string"
+        enum:
+          - "Always"
+          - "IfNotPresent"
+        description: "The Docker image pull policy; Always or IfNotPresent."
+      annotations:
+        type: "object"
+        additionalProperties:
+          type: "string"
+        description: "Key/value pairs of annotations to be passed to the operator."
+      config_file:
+        type: "string"
+        description: "Path to the kubernetes configuration file."
+      volumes:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of the names of volumes to be used by the operator."
+      volume_mounts:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of the names of volume mounts to be used by the operator."
+      configmaps:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of the names of the config maps to be used by the operator."
+      resources:
+        type: "array"
+        items:
+          $ref: "#/definitions/KubernetesResource"
+        description: "Definition of the Kubernetes resources to be applied to the pod. *OPTIONAL*."
+      affinity:
+        $ref: "#/definitions/KubernetesAffinity"
+        description: "Node affinity rules tobe applied to the pod."
+    xml:
+      name: "KubernetesOperator"
+  DagDsl:
+    type: "object"
+    required:
+      - "dag_name"
+      - "mode"
+    properties:
+      project_id:
+        type: "string"
+        description: "GCP project id of the cloud composer instance. Optional if PROJECT_ID environment variable is configured."
+      location:
+        type: "string"
+        description: "GCP zone name of the cloud composer instance. Optional if GCP_LOCATION environment variable is configured."
+      composer_environment:
+        type: "string"
+        description: "Name of the cloud composer instance. Optional if COMPOSER_ENVIRONMENT environment variable is configured."
+      dag_name:
+        type: "string"
+        description: "The name of the dag. The name should not contain whitespace. Use underscore _ as separator."
+      dag_description:
+        type: "string"
+        description: "A description of the dag. *OPTIONAL*."
+      default_args:
+        $ref: "#/definitions/DagDefaultArgs"
+      dag_tags:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of tags to be associated with the Dag. *OPTIONAL*."
+      dag_params:
+        type: "object"
+        additionalProperties:
+          type: "string"
+        description: "Key/value pairs to be passed to the Dag as additional parameters. *OPTIONAL*."
+      doc_md:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of markdown text that can be used to include documentation for the Dag. *OPTIONAL*."
+      dynamic_functions:
+        $ref: "#/definitions/DagDynamicFunctions"
+      mode:
+        type: "string"
+        description: "The mode with which to provide the dag information. INLINE == JSON DSL, GCS == Dag file in GCS bucket, GIT == Dag file in GIT repository."
+        enum:
+          - "INLINE"
+          - "GCS"
+          - "GIT"
+      bucket_name:
+        type: "string"
+        description: "The name of the Google Cloud Storage bucket (without prefixes) where the Dag file is located. *MANDATORY* when mode==GCS."
+      git_url:
+        type: "string"
+        description: "The URL (without the protocol, do not include https://) of the Git repository where the Dag file is located. *MANDATORY* when mode==GIT."
+      repo_name:
+        type: "string"
+        description: "The name of the Git repository (the project slug) where the Dag file is located. *MANDATORY* when mode==GIT."
+      file_path:
+        type: "string"
+        description: "The relative path within the Google Cloud Storage bucket (including prefixes) or the Git repository where the Dag file is located. *MANDATORY* when mode==GCS or mode==GIT."
+      execution_sequence:
+        type: "array"
+        items:
+          type: "string"
+        description: "Definition of the execution sequence of the Dag operators. The operators will be executed in sequence, beginning with the operator at array index 0 and progressing sequentially with the last operator at array index N-1. *OPTIONAL*."
+      bash_operators:
+        type: "array"
+        items:
+          $ref: "#/definitions/BashOperator"
+        description: "Definition of the Bash operators to be executed within the Dag. *OPTIONAL*."
+      python_operators:
+        type: "array"
+        items:
+          $ref: "#/definitions/PythonOperator"
+        description: "Definition of the Python operators to be executed within the Dag. *OPTIONAL*."
+      kubernetes_secrets:
+        type: "object"
+        additionalProperties:
+          $ref: "#/definitions/KubernetesSecret"
+      kubernetes_operators:
+        type: "array"
+        items:
+          $ref: "#/definitions/KubernetesOperator"
+        description: "Definition of the Kubernetes operators to be executed within the Dag. *OPTIONAL*."
+    xml:
+      name: "DagDsl"

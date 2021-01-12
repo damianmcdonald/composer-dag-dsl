@@ -1,0 +1,39 @@
+#!/bin/bash
+
+###################################################################
+#Script Name	  :execute-tests.sh
+#Description	  :Script file used to configure and execute integration tests
+#Args           :
+#Author         :Damian McDonald
+#Credits        :Damian McDonald
+#License        :GPL
+#Version        :1.0.0
+#Maintainer     :Damian McDonald
+#Status         :Development
+###################################################################
+
+# export python path in order to define module locations
+export PYTHONPATH=/opt/devel/python/composer-dag-dsl/
+
+# export pytest specific environment variables
+export TEST_BUCKET=test-composer
+export TEST_GIT_URL=https://github.com/damianmcdonald/composer-dag-dsl.git
+export TEST_GIT_FILE_PATH=composer-test/unit/dag/static/dag_workflow_simple.py
+
+# export application specific environment variables
+export LOG_LEVEL=DEBUG
+export GIT_PYTHON_GIT_EXECUTABLE=/usr/bin/git
+export PROJECT_ID=playground-s-11-48817e79
+export GCP_LOCATION=europe-west3
+export COMPOSER_ENVIRONMENT=composer
+# GOOGLE_APPLICATION_CREDENTIALS is the minified and base64 encoded version of a GCP service account key in JSON format
+export GOOGLE_APPLICATION_CREDENTIALS=eyJ0eXBlIjoic2VydmljZV9hY2NvdW50IiwicHJvamVjdF9pZCI6InBsYXlncm91bmQtcy0xMS00ODgxN2U3OSIsInByaXZhdGVfa2V5X2lkIjoiOTU4NjRkMTFlM2JiN2JmMzhkZTE1NjhkZDFhMWU1YjMyOTMxMDg3NyIsInByaXZhdGVfa2V5IjoiLS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tXG5NSUlFdmdJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0JLZ3dnZ1NrQWdFQUFvSUJBUURCWkcvWWZQVUdBUngyXG50RUJiajhOamJDb25aT3NJb203M1NEdXRrcjFSSGFQL1RLemluQ0ZuZTBaMloyeVljd0I5TU5DdUpUYUhnUnhoXG5Mb1crekRsUitWc0E4ZWZKOVVOTXZkVHMzRHpPZ1ZKcGFvY2tzYXlCV2xNTkJyZkt6TXdJVlkyanlXSlBITkovXG5xVElPT2h6aENzWmpVNnFac2h3SnBFbGlHWGx0cVI1UmNsZ3Ryc2xrUHlRUGpZd2hDRTVENmYwQjZwTEVzRC9vXG5xbTYvbVVMaTJ0dDJPc2ZmR0FZVkFsSjdrZklHZkozTFFVemlxaDhENk9xcS9MSXdVR0RnZG16MmtZdTZzTExjXG41dnhUMFBUakU4YXJSS0tJUGJ6dm0raEVTMnh4RGd3aEE4SERpcE1odnZ5UGxGb0RnNEt5V3diUUVoY0hVZVlCXG5sWWJ6aGEwNUFnTUJBQUVDZ2dFQUJXRDBmbVl0VDJzdy9qa3hzQW85MGpKVU1zL0svS3k5M3RsT3RadG04ZzViXG52UkpHSGJCZmVuZ1NnK0VKQTIxeFprbjVCOXJubXhtemJ4MkM0VVZmVThFV2I1Nkt4cEp3ZW40dUlaOVhmcHZZXG5yYTlsamxiMXVBeEowb3N0Q2ZJcnU1Q2JsYUpZZm1CTUYzcGVkc2hWZk1uV3JqVUp3ZWdUQVE2bGJ0bk1CNGwzXG44VTliL2EwbU1jREl1ODVTRDhGM1JaVWgwcnZ2K09vNjJBN1NjS0dZZjRGMnRrbW5vTkJkdnkrZWZ0azdUbE9HXG5kZC9yckh0SW43TE1xeE1uMGt6NDVQZThWdGlxKzBuVEZnZzBEQjRweXdZeVJxaUVpelB5R3BRdno2SlpBTzVPXG56WHk5NUVKVTVwa0pVZE43QWxJbmo5TWZZSzhKR2NVZnlYUjMvbXFPelFLQmdRRHdQSGRxc2M4bEZYbVZGVDJmXG5aUU95OGNrUEhEa1lZajFPbVBzK2JYZWorSmpHUFVvNUhhR3d5NW9qZmk4eDEzVS90eHpvenpJOEpWRFhFb0hmXG53U1lhOXBrUTUwOUszSVlDZmZtMDZiekVmR0dWc1NCUHJsT1ZsRmRpaVZJQ0w3T0hyQ3JnYWVPR3RQS2dxSndsXG5MNysvNUg4MEtMaFk4NUZXOEpNcVYzZGVaUUtCZ1FET0ZSUUdnM2tpTW5tQ0hUMm1iaERrV0xWQk0zL2ZDU0dmXG5XdVdUdzVLT3BPSHpqTTRvNzVtVHJFenlTVHI3ZzdUOWR4R1piTEY5WmlMa1kwOW5QbjU2bHZLUElyNnR1SExsXG5ldDdOUUNBMXRqbkpOUVNvMkJjZnU5cSsvTnRYQzQyL2NCblJwN1d6NndpeFVEcEdWencrOWxvT2NQQ0I5VDViXG5PdmVOOVRLTVJRS0JnQkhTaXBGeHk0cFd3NFJaNVE1ME1nZ09nL29JLy90ZEhtczhVamRaYTZ6UWZwVUdhd0U5XG52NGNjTTcwNldVbjdVQW1BRGpiL1dCeTZML3NrdGxuaFBIQjNwdmRvRWF2ZUhGc0crWVdBYWE2eUE1TlZacTVDXG5vcFRRUW9OZTZLU2M0VmJKWVF6eERoNHFRbTNFMUlDMXdDWCtUNm1RODh3MWxheTdnRTk5MmE4NUFvR0JBTU5EXG5GWVpXYkNBSzB6YUZualJqZFgzbXoxYklCUkMvQml5SFk1OXVYeDdvKzI1WXE3Mzl4L1l6KzNSV0RwemhYa3dLXG4xWklaZXRMbVE0bEN6Nmx6ZlVPS1lxbGNzbTdIcFpYcHBkRzBRTkNqcUgwTXp5MXNFZnp2Y1lRazhXNjRjOFkvXG40VGJWUVVVSUhXUmtMOU1XTk84elhJRHlZZS9BL3lSUjZ0Mkd4aTVCQW9HQkFPaFVMSUV3SUZMZlU4ZHlTbUR6XG5PZEZ0YS9EcE1UV3pYdTlHSkl0N21raUFiczJ2M3UzZzBNRzlKWDNJcEd6RkJWeXcvOG9DWlFYZ285UUp6K3lVXG42ZFNGdGxtU0IxRmdxeHlFaG9rZ3lNV1ZOYzJ2SUk4K28wSko4TmZDU05VdnVjSU0yOStLRERuTVZkYUxJY1E4XG5EQUxEVk5adEx3eXFDQW9KbnhpQXJuTXNcbi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS1cbiIsImNsaWVudF9lbWFpbCI6InNhLWNvbXBvc2VyQHBsYXlncm91bmQtcy0xMS00ODgxN2U3OS5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsImNsaWVudF9pZCI6IjEwMDU5Nzk5OTg5MzYxMjI0ODA5NiIsImF1dGhfdXJpIjoiaHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tL28vb2F1dGgyL2F1dGgiLCJ0b2tlbl91cmkiOiJodHRwczovL29hdXRoMi5nb29nbGVhcGlzLmNvbS90b2tlbiIsImF1dGhfcHJvdmlkZXJfeDUwOV9jZXJ0X3VybCI6Imh0dHBzOi8vd3d3Lmdvb2dsZWFwaXMuY29tL29hdXRoMi92MS9jZXJ0cyIsImNsaWVudF94NTA5X2NlcnRfdXJsIjoiaHR0cHM6Ly93d3cuZ29vZ2xlYXBpcy5jb20vcm9ib3QvdjEvbWV0YWRhdGEveDUwOS9zYS1jb21wb3NlciU0MHBsYXlncm91bmQtcy0xMS00ODgxN2U3OS5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSJ9
+
+# executes the full test suite
+python -m pytest --disable-pytest-warnings -rP
+
+# executes a specific test class
+# python -m pytest --disable-pytest-warnings -rP airflow/airflow_service_test.py
+
+# executes a specific test case within a specific test class
+# python -m pytest --disable-pytest-warnings -rP api/api_test.py::test_trigger_dag

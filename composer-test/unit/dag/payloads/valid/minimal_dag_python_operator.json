@@ -1,0 +1,14 @@
+{
+    "dag_name" : "minimal_dag_python_operator",
+    "mode": "INLINE",
+    "python_operators": [
+        {
+            "task_id" : "python_operator_01",
+            "function_def" : [
+                "def python_operator_func_1():",
+                "   print('Hello from Airflow Python Operator 01 -- DYNAMIC')"
+            ],
+            "function_name" : "python_operator_func_1"
+        }
+    ]
+}

@@ -1,0 +1,7 @@
+{
+    "dag_name" : "empty_operators",
+    "mode": "INLINE",
+    "kubernetes_pod_operators": [],
+    "bash_operators": [],
+    "python_operators": []
+}

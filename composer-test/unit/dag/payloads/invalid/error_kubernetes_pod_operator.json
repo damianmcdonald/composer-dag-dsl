@@ -1,0 +1,10 @@
+{
+    "dag_name" : "error_kubernetes_pod_operator.json",
+    "mode": "INLINE",
+    "kubernetes_pod_operators": [
+        {
+            "task_id": "k8s_pod_operator_example_task_01",
+            "name": "k8s_pod_example_01"
+        }
+    ]
+}

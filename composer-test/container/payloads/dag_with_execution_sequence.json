@@ -1,0 +1,40 @@
+{
+    "dag_name" : "dag_with_execution_sequence",
+    "execution_sequence": [
+        "bash_operator_01",
+        "k8s_pod_operator_example_task_01",
+        "python_operator_01"
+    ],
+    "mode": "INLINE",
+    "kubernetes_pod_operators": [
+        {
+            "task_id": "k8s_pod_operator_example_task_01",
+            "name": "k8s_pod_example_01",
+            "image": "bash",
+            "cmds": [
+                "echo"
+            ],
+            "arguments": [
+                "'Hello from Airflow Kubernetes Pod Operator 01'"
+            ]
+        }
+    ],
+    "python_operators": [
+        {
+            "task_id": "python_operator_01",
+            "function_def": [
+                "def python_operator_func_1():",
+                "   print('Goodbye from Airflow Python Operator 01 -- DYNAMIC')"
+            ],
+            "function_name": "python_operator_func_1"
+        }
+    ],
+    "bash_operators": [
+        {
+            "task_id": "bash_operator_01",
+            "command": [
+                "echo 'Hello from Airflow Bash Operator 01';"
+            ]
+        }
+    ]
+}
