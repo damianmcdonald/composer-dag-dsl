@@ -20,6 +20,7 @@ from airflow.operators import bash_operator
 from airflow.operators import python_operator
 from airflow.contrib.kubernetes import secret
 from airflow.contrib.operators import kubernetes_pod_operator
+from airflow.providers.google.cloud.operators.kubernetes_engine import GKEStartPodOperator
 """
 NOTE: the above import statements are used dynamically within the template. Even though an IDE may indicate
 they are not used, please only remove the following imports if you are absolutely sure they are not required.
