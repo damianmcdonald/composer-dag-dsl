@@ -93,6 +93,22 @@ def __validate_dsl_json(dsl_json):
                 raise ValueError(f"'kubernetes_pod_operator' defined but it does not contains a 'name': {operator}")
             if 'image' not in operator:
                 raise ValueError(f"'kubernetes_pod_operator' defined but it does not contains a 'image': {operator}")
+    if "gke_start_pod_operators" in dsl_json:
+        if len(dsl_json['gke_start_pod_operators']) == 0:
+            raise ValueError(f"'gke_start_pod_operators' defined but it contains no elements")
+        for operator in dsl_json['gke_start_pod_operators']:
+            if 'task_id' not in operator:
+                raise ValueError(f"'gke_start_pod_operator' defined but it does not contains a 'task_id': {operator}")
+            if 'name' not in operator:
+                raise ValueError(f"'gke_start_pod_operator' defined but it does not contains a 'name': {operator}")
+            if 'image' not in operator:
+                raise ValueError(f"'gke_start_pod_operator' defined but it does not contains a 'image': {operator}")
+            if 'cluster_name' not in operator:
+                raise ValueError(f"'gke_start_pod_operator' defined but it does not contains a 'cluster_name': {operator}")
+            if 'project_id' not in operator:
+                raise ValueError(f"'gke_start_pod_operator' defined but it does not contains a 'project_id': {operator}")
+            if 'location' not in operator:
+                raise ValueError(f"'gke_start_pod_operator' defined but it does not contains a 'location': {operator}")
     if "bash_operators" in dsl_json:
         if len(dsl_json['bash_operators']) == 0:
             raise ValueError(f"'bash_operators' defined but it contains no elements")

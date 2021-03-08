@@ -1,0 +1,15 @@
+{
+    "dag_name" : "gke_operator1",
+    "mode": "INLINE",
+    "gke_start_pod_operators": [
+        {
+            "task_id": "gke_operator1",
+            "cluster_name": "target-cluster",
+            "name": "gke_operator1",
+            "project_id": "external-project",
+            "location": "us-central1-b",
+            "image": "us-docker.pkg.dev/cloudrun/container/hello",
+            "namespace": "default"
+        }
+    ]
+}

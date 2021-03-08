@@ -1,0 +1,52 @@
+{
+    "dag_name" : "dag6",
+    "execution_sequence": [
+        "bash_operator_06",
+        "k8s_pod_operator_example_task_06",
+        "python_operator_06",
+        "gke_start_pod_operator_example_task_06"
+    ],
+    "mode": "INLINE",
+    "kubernetes_pod_operators": [
+        {
+            "task_id": "k8s_pod_operator_example_task_06",
+            "name": "k8s_pod_example_06",
+            "image": "bash",
+            "cmds": [
+                "echo"
+            ],
+            "arguments": [
+                "'Hello from Airflow Kubernetes Pod Operator 06'"
+            ]
+        }
+    ],
+    "python_operators": [
+        {
+            "task_id": "python_operator_06",
+            "function_def": [
+                "def python_operator_func_6():",
+                "   print('Goodbye from Airflow Python Operator 06 -- DYNAMIC')"
+            ],
+            "function_name": "python_operator_func_6"
+        }
+    ],
+    "bash_operators": [
+        {
+            "task_id": "bash_operator_06",
+            "command": [
+                "echo 'Hello from Airflow Bash Operator 06';"
+            ]
+        }
+    ],
+    "gke_start_pod_operators": [
+        {
+            "task_id": "gke_operator1",
+            "cluster_name": "target-cluster",
+            "name": "gke_operator1",
+            "project_id": "external-project",
+            "location": "us-central1-b",
+            "image": "us-docker.pkg.dev/cloudrun/container/hello",
+            "namespace": "default"
+        }
+    ]
+}

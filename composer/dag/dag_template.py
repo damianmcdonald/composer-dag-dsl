@@ -21,7 +21,7 @@ from airflow.operators import python_operator
 from airflow.contrib.kubernetes import secret
 from airflow.contrib.operators import kubernetes_pod_operator
 """
-NOTE: the above import statements are used dynamically within the template. Even though an IDE may indicate 
+NOTE: the above import statements are used dynamically within the template. Even though an IDE may indicate
 they are not used, please only remove the following imports if you are absolutely sure they are not required.
 """
 
@@ -241,6 +241,121 @@ def build_bash_operator(operator_ref, dag_ref):
     return op
 # [END build_bash_operator]
 
+# [START build_gke_start_pod_operator]
+def build_gke_start_pod_operator(operator_ref, dag_ref):
+    """
+    Builds a DAG operator of type: GKEStartPodOperator.
+    Args:
+        operator_ref (string): the definition of the operator
+        dag_ref (string): the reference to the dag to associate this operator
+    """
+    op = GKEStartPodOperator(
+        task_id=operator_ref['task_id'],
+        name=operator_ref['name'],
+        image=operator_ref['image'],
+        cluster_name=operator_ref['cluster_name'],
+        project_id=operator_ref['project_id'],
+        location=operator_ref['location'],
+        namespace=operator_ref['namespace'] if 'namespace' in operator_ref else 'default',
+        dag=dag_ref
+    )
+
+    # populate non-default operator values
+    if 'cmds' in operator_ref:
+        op.cmds = operator_ref['cmds']
+
+    if 'arguments' in operator_ref:
+        op.arguments = operator_ref['arguments']
+
+    if 'env_vars' in operator_ref:
+        op.env_vars = operator_ref['env_vars']
+
+    if 'labels' in operator_ref:
+        op.env_vars = operator_ref['labels']
+
+    if 'startup_timeout_seconds' in operator_ref:
+        op.startup_timeout_seconds = operator_ref['startup_timeout_seconds']
+
+    if 'ports' in operator_ref:
+        op.ports = operator_ref['ports']
+
+    if 'params' in operator_ref:
+        op.params = operator_ref['params']
+
+    if 'node_selectors' in operator_ref:
+        op.node_selectors = operator_ref['node_selectors']
+
+    if 'resources' in operator_ref:
+        op.resources = operator_ref['resources']
+
+    if 'annotations' in operator_ref:
+        op.annotations = operator_ref['annotations']
+
+    if 'volumes' in operator_ref:
+        op.volumes = operator_ref['volumes']
+
+    if 'volume_mounts' in operator_ref:
+        op.volumes = operator_ref['volume_mounts']
+
+    if 'affinity' in operator_ref:
+        op.affinity = operator_ref['affinity']
+
+    if 'configmaps' in operator_ref:
+        op.configmaps = operator_ref['configmaps']
+
+    # define pod secrets
+    pod_secrets = []
+    if 'pod_secret_refs' in operator_ref:
+        for pod_secret in operator_ref['pod_secret_refs']:
+            if not list(find_key_in_dict('kubernetes_secrets', payload)):
+                raise ValueError(
+                    f"Pod {operator_ref['name']} declares 'pod_secret_refs' but 'kubernetes_secrets' has not been defined."
+                )
+
+            secret_entry_ref = payload['kubernetes_secrets'][pod_secret]
+            secret_entry = secret.Secret(
+                # Deploy type: 'env' for environment  variable or 'volume'
+                deploy_type=secret_entry_ref['deploy_type'],
+                # The name of the environment variable or the path of the volume
+                deploy_target=secret_entry_ref['deploy_target'],
+                # Name of the Kubernetes Secret
+                secret=secret_entry_ref['secret'],
+                # Key of a secret stored in this Secret object or key in the form of service account file name
+                key=secret_entry_ref['key']
+            )
+            pod_secrets.append(secret_entry)
+
+        op.secrets = pod_secrets
+
+        if 'image_pull_policy' in operator_ref:
+            op.image_pull_policy = operator_ref['image_pull_policy']
+
+        # define pull secrets
+        image_pull_secrets = []
+        if 'image_pull_secret_refs' in operator_ref:
+            for image_pull_secret in operator_ref['image_pull_secret_refs']:
+                if not list(find_key_in_dict('kubernetes_secrets', payload)):
+                    raise ValueError(
+                        f"Pod {operator_ref['name']} declares 'image_pull_secret_refs' but 'kubernetes_secrets' has not been defined."
+                    )
+
+                secret_entry_ref = payload['kubernetes_secrets'][image_pull_secret]
+                secret_entry = secret.Secret(
+                    # Deploy type: 'env' for environment  variable or 'volume'
+                    deploy_type=secret_entry_ref['deploy_type'],
+                    # The name of the environment variable or the path of the volume
+                    deploy_target=secret_entry_ref['deploy_target'],
+                    # Name of the Kubernetes Secret
+                    secret=secret_entry_ref['secret'],
+                    # Key of a secret stored in this Secret object or key in the form of service account file name
+                    key=secret_entry_ref['key']
+                )
+                image_pull_secrets.append(secret_entry)
+
+            op.image_pull_secrets = image_pull_secrets
+
+    return operator
+# [END build_gke_start_pod_operator]
 
 # [START default_args definitions]
 default_args = {}
@@ -313,6 +428,7 @@ if (
         not list(find_key_in_dict('bash_operators', payload))
         and not list(find_key_in_dict('python_operators', payload))
         and not list(find_key_in_dict('kubernetes_pod_operators', payload))
+        and not list(find_key_in_dict('gke_start_pod_operators', payload))
 ):
     raise ValueError(
         "A DAG definition must contain at least one of; bash_operators, python_operators or kubernetes_pod_operators."
@@ -322,6 +438,7 @@ if (
         ('bash_operators' in payload and not len(payload['bash_operators']) > 0)
         or ('python_operators' in payload and not len(payload['python_operators']) > 0)
         or ('kubernetes_pod_operators' in payload and not len(payload['kubernetes_pod_operators']) > 0)
+        or ('gke_start_pod_operators' in payload and not len(payload['gke_start_pod_operators']) > 0)
 ):
     raise ValueError(
         "A DAG definition must contain at least one element in; bash_operators, python_operators or kubernetes_pod_operators."
@@ -341,6 +458,11 @@ if list(find_key_in_dict('kubernetes_pod_operators', payload)):
     kubernetes_pod_operators = payload['kubernetes_pod_operators']
     for operator in kubernetes_pod_operators:
         build_kubernetes_pod_operator(operator, dag)
+
+if list(find_key_in_dict('gke_start_pod_operators', payload)):
+    gke_start_pod_operators = payload['gke_start_pod_operators']
+    for operator in gke_start_pod_operators:
+        build_gke_start_pod_operator(operator, dag)
 # [END add operators to DAG]
 
 

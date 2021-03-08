@@ -223,3 +223,6 @@ zipp==3.4.0
 zope.deprecation==4.4.0
 zope.event==4.5.0
 zope.interface==5.2.0
+apache-airflow-providers-http==1.1.0
+apache-airflow-providers-google==2.0.0
+apache-airflow-backport-providers-cncf-kubernetes==2020.11.23
