@@ -244,19 +244,6 @@ definitions:
         description: "Name of the function. This must match the name of the function described in start_date_def. *Optional*."
     xml:
       name: "DagStartDateFunction"
-  DagScheduledIntervalFunction:
-    type: "object"
-    properties:
-      schedule_interval_def:
-        type: "array"
-        items:
-          type: "string"
-        description: "Each element of the array contains a line of the code of the function. *Optional*."
-      schedule_interval_name:
-        type: "string"
-        description: "Name of the function. This must match the name of the function described in schedule_interval_def. *Optional*."
-    xml:
-      name: "DagScheduledIntervalFunction"
   DagRetryDelayFunction:
     type: "object"
     properties:
@@ -288,8 +275,6 @@ definitions:
     properties:
       start_date:
         $ref: "#/definitions/DagStartDateFunction"
-      schedule_interval:
-        $ref: "#/definitions/DagScheduledIntervalFunction"
       retry_delay:
         $ref: "#/definitions/DagRetryDelayFunction"
       dagrun_timeout:
@@ -418,6 +403,113 @@ definitions:
                       description: "An array of node affinity expressions to match."
     xml:
       name: "KubernetesAffinity"
+  GKEStartPodOperator:
+    type: "object"
+    required:
+      - "task_id"
+      - "name"
+      - "image"
+      - "cluster_name"
+      - "project_id"
+      - "location"
+    properties:
+      cluster_name:
+        type: "string"
+        description: "Name of the cluster where to deploy the DAG. Only applies for GKEStartPodOperator"
+      project_id:
+        type: "string"
+        description: "GCP project id of the target cluster"
+      location:
+        type: "string"
+        description: "GCP location of the target cluster"
+      task_id:
+        type: "string"
+        description: "Unique name of the operator."
+      name:
+        type: "string"
+        description: "Descriptive name of the operator."
+      image:
+        type: "string"
+        description: "Name of the Docker image of the operator."
+      namespace:
+        type: "string"
+        description: "The Kubernetes namespace in which to deploy the operator."
+      cmds:
+        type: "array"
+        items:
+          type: "string"
+        description: "Array of commands to be executed by the Docker image."
+      arguments:
+        type: "array"
+        items:
+          type: "string"
+        description: "Array of arguments to be executed by the Docker image."
+      env_vars:
+        type: "object"
+        additionalProperties:
+          type: "string"
+        description: "Key/value pairs of environment variables to be passed to the operator."
+      labels:
+        type: "object"
+        additionalProperties:
+          type: "string"
+        description: "Key/value pairs of labels to be passed to the operator."
+      pod_secret_refs:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of the names of the kubernetes_secrets required by the operator."
+      image_pull_secret_refs:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of the names of the kubernetes_secrets required by the operator in order to pull the Docker image."
+      ports:
+        type: "array"
+        items:
+          type: "integer"
+          format: "int64"
+        description: "An array of the ports number to be exposed from the Docker image."
+      startup_timeout_seconds:
+        type: "integer"
+        format: "int64"
+        description: "The pod startup timeout in seconds."
+      image_pull_policy:
+        type: "string"
+        enum:
+          - "Always"
+          - "IfNotPresent"
+        description: "The Docker image pull policy; Always or IfNotPresent."
+      annotations:
+        type: "object"
+        additionalProperties:
+          type: "string"
+        description: "Key/value pairs of annotations to be passed to the operator."
+      volumes:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of the names of volumes to be used by the operator."
+      volume_mounts:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of the names of volume mounts to be used by the operator."
+      configmaps:
+        type: "array"
+        items:
+          type: "string"
+        description: "An array of the names of the config maps to be used by the operator."
+      resources:
+        type: "array"
+        items:
+          $ref: "#/definitions/KubernetesResource"
+        description: "Definition of the Kubernetes resources to be applied to the pod. *OPTIONAL*."
+      affinity:
+        $ref: "#/definitions/KubernetesAffinity"
+        description: "Node affinity rules tobe applied to the pod."
+    xml:
+      name: "GKEStartPodOperator"
   KubernetesOperator:
     type: "object"
     required:
@@ -549,7 +641,10 @@ definitions:
         additionalProperties:
           type: "string"
         description: "Key/value pairs to be passed to the Dag as additional parameters. *OPTIONAL*."
-      doc_md:
+      schedule_interval:
+        type: "string"
+        description: "Cron Expression with the schedule interval for this DAH, sample : `15 08 * * *` "
+      dag_doc_md:
         type: "array"
         items:
           type: "string"
@@ -599,5 +694,10 @@ definitions:
         items:
           $ref: "#/definitions/KubernetesOperator"
         description: "Definition of the Kubernetes operators to be executed within the Dag. *OPTIONAL*."
+      gke_start_pod_operators:
+        type: "array"
+        items:
+          $ref: "#/definitions/GKEStartPodOperator"
+        description: "Definition of the GKE Start Pod Operators to be executed within the Dag. *OPTIONAL*."
     xml:
       name: "DagDsl"

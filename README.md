@@ -3,8 +3,8 @@
 * [Overview](#overview)
 * [Architecture diagram](#architecture-diagram)
 * [Getting started](#getting-started)
-	* [Clone the repository](#clone-the-repository) 
-	* [Installing the Python dependencies](#installing-the-python-dependencies) 
+	* [Clone the repository](#clone-the-repository)
+	* [Installing the Python dependencies](#installing-the-python-dependencies)
 	* [Execute the unit tests](#execute-the-unit-tests)
 	* [Build the Docker image](#build-the-docker-image)
 	* [Push the Docker image to GCP Cloud Registry](#push-the-docker-image-to-gcp-cloud-registry)
@@ -110,7 +110,7 @@ The following steps can be performed to push the local Docker image to GCP Cloud
 # configure your gcloud command with a user with permissions to push images to Cloud Registry
 gcloud auth login user@gcp-account.com
 
-# add GCP Cloud Registry as a Docker creds helper 
+# add GCP Cloud Registry as a Docker creds helper
 gcloud auth configure-docker "eu.gcr.io"
 
 # build the Docker image
@@ -138,7 +138,7 @@ With respect to this project, the JSON DAG DSL, allows a consumer to describe a 
 
 For a complete overview of the entire JSON DAG DSL specification, please see the [Swagger-UI](https://swagger.io/tools/swagger-ui/) documentation which is available within the running application at:
 
-https(s)://${HOSTNAME}:${PORT}/api/docs. 
+https(s)://${HOSTNAME}:${PORT}/api/docs.
 
 For example; http://localhost:5000/api/docs.
 
@@ -162,7 +162,29 @@ Let's start with a minimal example of defining a DAG via the JSON DAG DSL.
 
 In the above example, we define a *dag_name*, we specifiy the *mode* as `INLINE` and we define a simple *kubernetes_pod_operators* operator.
 
-In addition to the [kubernetes_pod_operator](https://cloud.google.com/composer/docs/how-to/using/using-kubernetes-pod-operator), Cloud Composer also supports a [Bash Operator](https://cloud.google.com/composer/docs/how-to/using/writing-dags#bashoperator) and a [Python Operator](https://cloud.google.com/composer/docs/how-to/using/writing-dags#pythonoperator) .
+In the below example, we define a *dag_name*, we specifiy the *mode* as `INLINE` and we define a simple *gke_start_pod_operators* operator.
+
+Let's look at a minimal GKE StartPodOperator example via the JSON DAG DSL approach.
+
+```JSON
+{
+    "dag_name" : "gke_operator1",
+    "mode": "INLINE",
+    "gke_start_pod_operators": [
+        {
+            "task_id": "gke_operator1",
+            "cluster_name": "target-cluster",
+            "name": "gke_operator1",
+            "project_id": "external-project",
+            "location": "us-central1-b",
+            "image": "us-docker.pkg.dev/cloudrun/container/hello",
+            "namespace": "default"
+        }
+    ]
+}
+```
+
+In addition to the [gke_start_pod_operators](https://airflow.apache.org/docs/apache-airflow-providers-google/stable/_api/airflow/providers/google/cloud/operators/kubernetes_engine/index.html#airflow.providers.google.cloud.operators.kubernetes_engine.GKEStartPodOperator)and[kubernetes_pod_operator](https://cloud.google.com/composer/docs/how-to/using/using-kubernetes-pod-operator), Cloud Composer also supports a [Bash Operator](https://cloud.google.com/composer/docs/how-to/using/writing-dags#bashoperator) and a [Python Operator](https://cloud.google.com/composer/docs/how-to/using/writing-dags#pythonoperator) .
 
 Let's look at a minimal Bash Operator example.
 
@@ -423,7 +445,7 @@ cd composer-api-src
 
 echo -e "${NC}"
 
-# add GCP Cloud Registry as a Docker creds helper 
+# add GCP Cloud Registry as a Docker creds helper
 echo -e "Configure Docker to push to ${BLUE}eu.gcr.io${NC}."
 gcloud auth configure-docker "eu.gcr.io"
 

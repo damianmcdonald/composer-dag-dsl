@@ -252,8 +252,8 @@ def git_download_file(git_url, repo_dir, file_path):
     """
     if os.environ.get('GIT_USERNAME') and os.environ.get('GIT_PASSWORD'):
         git_username = os.environ.get('GIT_USERNAME')
-        git_username = os.environ.get('GIT_PASSWORD')
-        remote = f"https://{git_username}:{git_username}@{git_url}"
+        git_password = os.environ.get('GIT_PASSWORD')
+        remote = f"https://{git_username}:{git_password}@{git_url}"
     else:
         remote = f"https://{git_url}"
     temp_dir = tempfile.gettempdir()
