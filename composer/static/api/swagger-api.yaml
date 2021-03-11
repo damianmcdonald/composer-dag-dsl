@@ -244,19 +244,6 @@ definitions:
         description: "Name of the function. This must match the name of the function described in start_date_def. *Optional*."
     xml:
       name: "DagStartDateFunction"
-  DagScheduledIntervalFunction:
-    type: "object"
-    properties:
-      schedule_interval_def:
-        type: "array"
-        items:
-          type: "string"
-        description: "Each element of the array contains a line of the code of the function. *Optional*."
-      schedule_interval_name:
-        type: "string"
-        description: "Name of the function. This must match the name of the function described in schedule_interval_def. *Optional*."
-    xml:
-      name: "DagScheduledIntervalFunction"
   DagRetryDelayFunction:
     type: "object"
     properties:
@@ -288,8 +275,6 @@ definitions:
     properties:
       start_date:
         $ref: "#/definitions/DagStartDateFunction"
-      schedule_interval:
-        $ref: "#/definitions/DagScheduledIntervalFunction"
       retry_delay:
         $ref: "#/definitions/DagRetryDelayFunction"
       dagrun_timeout:
@@ -656,7 +641,10 @@ definitions:
         additionalProperties:
           type: "string"
         description: "Key/value pairs to be passed to the Dag as additional parameters. *OPTIONAL*."
-      doc_md:
+      schedule_interval:
+        type: "string"
+        description: "Cron Expression with the schedule interval for this DAH, sample : `15 08 * * *` "
+      dag_doc_md:
         type: "array"
         items:
           type: "string"

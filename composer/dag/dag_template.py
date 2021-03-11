@@ -394,16 +394,6 @@ else:
         payload['dynamic_functions']['start_date']
     )
 
-
-# add the schedule_interval
-if list(find_key_in_dict('schedule_interval', payload)):
-    dag.schedule_interval = get_dynamic_function(
-        'schedule_interval',
-        'schedule_interval_def',
-        'schedule_interval_name',
-        payload['dynamic_functions']['schedule_interval']
-    )
-
 # add the dag run timeout
 if list(find_key_in_dict('dagrun_timeout', payload)):
     dag.dagrun_timeout = get_dynamic_function(
@@ -415,6 +405,9 @@ if list(find_key_in_dict('dagrun_timeout', payload)):
 
 if 'dag_tags' in payload:
     dag.tags = payload['dag_tags']
+
+if 'schedule_interval' in payload:
+    dag.schedule_interval = payload['schedule_interval']
 
 if 'dag_params' in payload:
     dag.params = payload['dag_params']
